@@ -1,0 +1,49 @@
+require("dotenv").config()
+const express = require("express")
+const mongoose = require("mongoose")
+const cookieParser = require("cookie-parser")
+const cors = require("cors")
+const session = require("express-session")
+
+const adminRouter = require("./routes/adminRoutes")
+const apiRouter = require("./routes/apiRoutes")
+const appRouter = require("./routes/appRoutes")
+const authRouter = require("./routes/authRoutes")
+const userRouter = require("./routes/userRoutes")
+const corsOption = require("./config/corsOption")
+const connectDB = require("./database/dbConnection")
+
+const { PORT, MONGO_LOCAL_URI, SESSION_SECRET } = process.env
+const app = express()
+
+connectDB(MONGO_LOCAL_URI)
+
+app.use(session({
+    secret: SESSION_SECRET,
+    resave: true,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 2 * 60 * 60 * 1000
+    }
+}))
+app.use(cookieParser())
+app.use(cors(corsOption))
+app.use(express.urlencoded({
+    extended: false
+}), express.json())
+
+app.use("/auth", authRouter)
+app.use("/api/v1/:accessToken", apiRouter)
+app.use("/user", userRouter)
+app.use("/app", appRouter)
+app.use("/admin", adminRouter)
+
+app.use("*", (req,res)=>{
+    res.sendStatus(404)
+})
+
+mongoose.connection.on("open", () => {
+    app.listen(PORT, () => {
+        console.log(`Server listening at Port ${PORT}... http://localhost:${PORT}`)
+    })
+})
