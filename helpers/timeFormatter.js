@@ -8,4 +8,4 @@ const timeFormatter = (post) => {
     return post
 }
 
-exports.module = timeFormatter
+module.exports = timeFormatter

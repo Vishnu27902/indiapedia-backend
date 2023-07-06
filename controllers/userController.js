@@ -30,7 +30,7 @@ const editUserData = async (req, res) => {
     let { name, email, img, phNumber } = req.body
     email = email.toLowerCase()
     const duplicateCheck = await userModel.findOne({ _id: email }).exec()
-    if (username!==email && duplicateCheck) {
+    if (username !== email && duplicateCheck) {
         console.log("Duplicate Entry")
         res.status(400).json({
             success: false,
@@ -129,7 +129,7 @@ const stateLike = async (req, res) => {
     const { id } = req.params
     try {
         await stateModel.updateOne({ _id: id }, {
-            $push: { "impression.usersLiked": username }
+            $push: { "impression.like": username }
         })
         console.log(`User with ID ${username} liked the content of State with ID ${id}`)
         res.status(200).json({
@@ -150,7 +150,7 @@ const stateDislike = async (req, res) => {
     const { id } = req.params
     try {
         await stateModel.updateOne({ _id: id }, {
-            $pull: { "impression.usersLiked": username }
+            $pull: { "impression.like": username }
         })
         console.log(`User with ID ${username} disliked the content of State with ID ${id}`)
         res.status(200).json({
@@ -171,7 +171,7 @@ const cityLike = async (req, res) => {
     const { id } = req.params
     try {
         await cityModel.updateOne({ _id: id }, {
-            $push: { "impression.usersLiked": username }
+            $push: { "impression.like": username }
         })
         console.log(`User with ID ${username} liked the content of City with ID ${id}`)
         res.status(200).json({
@@ -192,7 +192,7 @@ const cityDislike = async (req, res) => {
     const { id } = req.params
     try {
         await cityModel.updateOne({ _id: id }, {
-            $pull: { "impression.usersLiked": username }
+            $pull: { "impression.like": username }
         })
         console.log(`User with ID ${username} disliked the content of City with ID ${id}`)
         res.status(200).json({
@@ -212,10 +212,10 @@ const statePost = async (req, res) => {
     const { username } = req.session
     const { message } = req.body
     const { id } = req.params
-    const _id = mongoose.Schema.Types.ObjectId
+    const _id = new mongoose.Types.ObjectId()
     const post = timeFormatter({ username, message, _id })
     try {
-        await stateModel.updateOne({ _id: username }, {
+        await stateModel.updateOne({ _id: id }, {
             $push: { "impression.comment": post }
         })
         console.log(`User with ID ${username} commented on a state content with ID ${id}`)
@@ -236,9 +236,11 @@ const statePostDelete = async (req, res) => {
     const { username } = req.session
     const { id, postID } = req.params
     try {
-        await stateModel.updateOne({ _id: username, "impression.comment._id": postID }, {
+        await stateModel.updateOne({ _id: id, "impression.comment._id": postID }, {
             $pull: {
-                "impression.comment.$._id": postID
+                "impression.comment": {
+                    _id: postID
+                }
             }
         })
         console.log(`User with ID ${username} deleted his/her comment on a state content with ID ${id}`)
@@ -259,10 +261,10 @@ const cityPost = async (req, res) => {
     const { username } = req.session
     const { message } = req.body
     const { id } = req.params
-    const _id = mongoose.Schema.Types.ObjectId
+    const _id = new mongoose.Types.ObjectId()
     const post = timeFormatter({ username, message, _id })
     try {
-        await cityModel.updateOne({ _id: username }, {
+        await cityModel.updateOne({ _id: id }, {
             $push: { "impression.comment": post }
         })
         console.log(`User with ID ${username} commented on a city content with ID ${id}`)
@@ -283,9 +285,11 @@ const cityPostDelete = async (req, res) => {
     const { username } = req.session
     const { id, postID } = req.params
     try {
-        await cityModel.updateOne({ _id: username, "impression.comment._id": postID }, {
+        await cityModel.updateOne({ _id: id, "impression.comment._id": postID }, {
             $pull: {
-                "impression.comment.$._id": postID
+                "impression.comment": {
+                    _id: postID
+                }
             }
         })
         console.log(`User with ID ${username} deleted his/her comment on a city content with ID ${id}`)

@@ -288,7 +288,7 @@ const addNewUser = async (req, res) => {
         })
         if (role) {
             console.log(`New Admin ${name} registered with email ID ${email}`)
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: `New Admin ${name} registered with email ID ${email}`
             })
@@ -302,7 +302,7 @@ const addNewUser = async (req, res) => {
     } catch (err) {
         console.error(`Error occurred : ${err.message}`)
         res.status(409).json({
-            success: true,
+            success: false,
             message: `Error occurred : ${err.message}`
         })
     }

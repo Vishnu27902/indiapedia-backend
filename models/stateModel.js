@@ -36,11 +36,11 @@ const stateSchema = new Schema({
                 required: true,
                 unique: true
             },
-            user: {
+            username: {
                 type: String,
                 required: true
             },
-            comment: {
+            message: {
                 type: String,
                 required: true
             },

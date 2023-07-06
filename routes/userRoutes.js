@@ -12,7 +12,7 @@ Router.route("/states/like/:id").patch(stateLike).delete(stateDislike)
 
 Router.route("/states/post/:id").post(statePost)
 
-Router.route("/state/post/:id/:postID").delete(statePostDelete)
+Router.route("/states/post/:id/:postID").delete(statePostDelete)
 
 Router.route("/cities/like/:id").patch(cityLike).delete(cityDislike)
 
