@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const getDefaultImg = require("../helpers/defaultDummyImg")
 const Schema = mongoose.Schema
 
 const stateSchema = new Schema({
@@ -12,13 +13,16 @@ const stateSchema = new Schema({
     },
     img: {
         data: {
-            type: String
+            type: String,
+            default: getDefaultImg()
         },
         contentType: {
-            type: String
+            type: String,
+            default: "png"
         },
         alt: {
-            type: String
+            type: String,
+            default: "Image"
         }
     },
     impression: {
@@ -48,7 +52,7 @@ const stateSchema = new Schema({
     },
     flowChart: {
         type: Array,
-        default: ["General", "History", "Geography", "Education", "Economy", "Culture", "Sports", "Tourism"]
+        default: ["General", "History", "Geography", "Education", "Economy", "Culture", "Sports", "Tourism", "Additional"]
     },
     mainContent: [{
         order: {
@@ -71,13 +75,16 @@ const stateSchema = new Schema({
         list: Array,
         img: {
             data: {
-                type: String
+                type: String,
+                default: getDefaultImg()
             },
             contentType: {
-                type: String
+                type: String,
+                default: "png"
             },
             alt: {
-                type: String
+                type: String,
+                default: "Image"
             }
         }
     }]

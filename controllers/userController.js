@@ -13,7 +13,8 @@ const getUserData = async (req, res) => {
         console.log(`User ${userData.name}'s data fetched Success`)
         res.status(200).json({
             success: true,
-            message: `User ${userData.name}'s data fetched Success`
+            message: `User ${userData.name}'s data fetched Success`,
+            userData
         })
     } catch (err) {
         console.log(`Error Occurred : ${err.message}`)
@@ -29,7 +30,7 @@ const editUserData = async (req, res) => {
     let { name, email, img, phNumber } = req.body
     email = email.toLowerCase()
     const duplicateCheck = await userModel.findOne({ _id: email }).exec()
-    if (duplicateCheck) {
+    if (username!==email && duplicateCheck) {
         console.log("Duplicate Entry")
         res.status(400).json({
             success: false,
@@ -37,7 +38,7 @@ const editUserData = async (req, res) => {
         })
         return
     }
-    name = name.charAt[0].toUpperCase() + name.slice(1).toLowerCase()
+    name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
     try {
         await userModel.updateOne({ _id: username }, {
             _id: email,

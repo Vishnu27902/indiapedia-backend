@@ -12,6 +12,7 @@ const authRouter = require("./routes/authRoutes")
 const userRouter = require("./routes/userRoutes")
 const corsOption = require("./config/corsOption")
 const connectDB = require("./database/dbConnection")
+const verifyJWT = require("./middlewares/verifyJWT")
 
 const { PORT, MONGO_LOCAL_URI, SESSION_SECRET } = process.env
 const app = express()
@@ -32,13 +33,14 @@ app.use(express.urlencoded({
     extended: false
 }), express.json())
 
-app.use("/auth", authRouter)
-app.use("/api/v1/:accessToken", apiRouter)
-app.use("/user", userRouter)
+// app.use("/api/v1", apiRouter)
 app.use("/app", appRouter)
+app.use("/auth", authRouter)
+app.use(verifyJWT)
+app.use("/user", userRouter)
 app.use("/admin", adminRouter)
 
-app.use("*", (req,res)=>{
+app.use("*", (req, res) => {
     res.sendStatus(404)
 })
 

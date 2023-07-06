@@ -68,13 +68,22 @@ const addCity = async (req, res) => {
 
 const getState = async (req, res) => {
     const { id } = req.params
-    const stateData = await stateModel.findOne({ _id: id }).exec()
-    console.log(`State ${stateData.name} fetched Successfully`)
-    res.status(200).json({
-        success: true,
-        message: `State ${stateData.name} fetched Successfully`,
-        stateData
-    })
+    console.log(id)
+    try {
+        const stateData = await stateModel.findOne({ _id: id }).exec()
+        console.log(`State ${stateData.name} fetched Successfully`)
+        res.status(200).json({
+            success: true,
+            message: `State ${stateData.name} fetched Successfully`,
+            stateData
+        })
+    } catch (err) {
+        console.log(`Error Occurred : ${err.message}`)
+        res.status(409).json({
+            success: false,
+            message: `Error Occurred : ${err.message}`
+        })
+    }
 }
 
 const getCity = async (req, res) => {
@@ -98,7 +107,7 @@ const editState = async (req, res) => {
         return
     }
     try {
-        await stateModel.updateOne({ _id }, {
+        await stateModel.updateOne({ _id: id }, {
             $set: {
                 _id: code,
                 name,
@@ -123,7 +132,7 @@ const editState = async (req, res) => {
 const editCity = async (req, res) => {
     const { id } = req.params
     const { code, name, img, state, mainContent } = req.body
-    const cityData = await cityModel({ _id: id }).exec()
+    const cityData = await cityModel.findOne({ _id: id }).exec()
     if (!cityData) {
         console.log(`Duplicate Entry`)
         res.status(400).json({
@@ -157,7 +166,7 @@ const editCity = async (req, res) => {
 }
 
 const deleteState = async (req, res) => {
-    const { id } = req.body
+    const { id } = req.params
     try {
         await stateModel.deleteOne({ _id: id })
         console.log(`State with code ${id} deleted Successfully`)
@@ -175,7 +184,7 @@ const deleteState = async (req, res) => {
 }
 
 const deleteCity = async (req, res) => {
-    const { id } = req.body
+    const { id } = req.params
     try {
         await cityModel.deleteOne({ _id: id })
         console.log(`City with code ${id} deleted Successfully`)
@@ -193,19 +202,20 @@ const deleteCity = async (req, res) => {
 }
 
 const getAdminData = async (req, res) => {
-    const { username } = req.body
+    const { username } = req.session
     try {
         const { img, phNumber, name } = await userModel.findOne({ _id: username }).exec()
-        res.status(200).json({
+        userData = {
             email: username,
             img,
             phNumber,
             name
-        })
+        }
         console.log(`Admin Data of ${name} fetched Successfully`)
         res.status(200).json({
             success: true,
-            message: `Admin Data of ${name} fetched Successfully`
+            message: `Admin Data of ${name} fetched Successfully`,
+            userData
         })
     } catch (err) {
         console.log(`Error Occurred : ${err.message}`)
@@ -300,14 +310,12 @@ const addNewUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
     try {
-        await userModel.find({}, {
-            _id: 0,
-            name: 1
-        })
+        const usersData = await userModel.find({})
         console.log("Users data fetched Successfully")
         res.status(200).json({
             success: true,
-            message: "Users data fetched Successfully"
+            message: "Users data fetched Successfully",
+            usersData
         })
     } catch (err) {
         console.log(`Error Occurred : ${err.message}`)
@@ -320,11 +328,12 @@ const getUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
     const { id } = req.params
-    const userData = await userModel.find({ _id: id }).exec()
+    const userData = await userModel.findOne({ _id: id }).exec()
     console.log(`User ${userData.name} with ID ${id} fetched Successfully`)
     res.status(200).json({
         success: true,
-        message: `User ${userData.name} with ID ${id} fetched Successfully`
+        message: `User ${userData.name} with ID ${id} fetched Successfully`,
+        userData
     })
 }
 

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const getDefaultUserImg = require("../helpers/defaultUserImg")
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
@@ -8,13 +9,16 @@ const userSchema = new Schema({
     },
     img: {
         data: {
-            type: String
+            type: String,
+            default: getDefaultUserImg()
         },
         contentType: {
-            type: String
+            type: String,
+            default: "jpg"
         },
         alt: {
-            type: String
+            type: String,
+            default: 'DP'
         }
     },
     name: {

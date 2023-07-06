@@ -1,18 +1,18 @@
-const jwt=require("jsonwebtoken")
-const {ACCESS_TOKEN_SECRET}=process.env
+const jwt = require("jsonwebtoken")
+const { ACCESS_TOKEN_SECRET } = process.env
 
-const verifyJWT=(req,res)=>{
-    const authHeader=req.headers["authorization"]
-    if(!authHeader){
-        res.status(401).json({success:false,message:"Auth Header not set"})
+const verifyJWT = (req, res, next) => {
+    const authHeader = req.headers["authorization"]
+    if (!authHeader) {
+        res.status(401).json({ success: false, message: "Auth Header not set" })
     }
-    const ACCESS_TOKEN=authHeader.split(" ")[1]
+    const ACCESS_TOKEN = authHeader.split(" ")[1]
     jwt.verify(
         ACCESS_TOKEN,
         ACCESS_TOKEN_SECRET,
-        (err,decodedData)=>{
-            if(err){
-                res.status(403).json({success:false,message:"Token Expired"})
+        (err, decodedData) => {
+            if (err) {
+                res.status(403).json({ success: false, message: "Token Expired" })
                 console.error("Token Expired")
                 return
             }
@@ -22,4 +22,4 @@ const verifyJWT=(req,res)=>{
     )
 }
 
-module.exports=verifyJWT
+module.exports = verifyJWT

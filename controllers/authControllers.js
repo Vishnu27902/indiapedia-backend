@@ -63,7 +63,7 @@ const signInController = async (req, res) => {
             },
             ACCESS_TOKEN_SECRET,
             {
-                expiresIn: "5m"
+                expiresIn: "10m"
             }
         )
         const REFRESH_TOKEN = jwt.sign(
@@ -108,12 +108,95 @@ const signInController = async (req, res) => {
 }
 
 const refreshController = async (req, res) => {
-
+    const cookies = req.cookies
+    if (!cookies?.jwt) {
+        console.log("Cookie not Found")
+        res.status(401).json({
+            success: false,
+            message: "Cookie not Found"
+        })
+        return
+    }
+    const REFRESH_TOKEN = cookies.jwt
+    const userData = await userModel.findOne({ REFRESH_TOKEN }).exec()
+    if (!userData) {
+        console.log("No User with Refresh Token Found")
+        res.status(403).json({
+            success: false,
+            message: "No User with Refresh Token Found"
+        })
+        return
+    }
+    jwt.verify(
+        REFRESH_TOKEN,
+        REFRESH_TOKEN_SECRET,
+        (err, decoded) => {
+            if (err) {
+                console.log("Access Token Expired")
+                res.status(403).json({
+                    success: false,
+                    message: "Access Token Expired"
+                })
+            }
+            const ACCESS_TOKEN = jwt.sign(
+                {
+                    username: decoded.username
+                },
+                ACCESS_TOKEN_SECRET,
+                {
+                    expiresIn: '10m'
+                }
+            )
+            console.log("Access Token regenerated Successfully")
+            res.status(200).json({
+                success: true,
+                message: "Access Token regenerated Successfully",
+                ACCESS_TOKEN
+            })
+        }
+    )
 }
 
-const logoutController = (req, res) => {
-    req.session.destroy()
-    res.sendStatus(200)
+const logoutController = async (req, res) => {
+    const cookies = req.cookies
+    if (!cookies?.jwt) {
+        req.session.destroy()
+        console.log("JWT Cookie Not Found")
+        res.status(204).json({
+            success: true,
+            message: "JWT Cookie Not Found"
+        })
+        return
+    }
+    const REFRESH_TOKEN = cookies.jwt
+    const userData = userModel.findOne({ REFRESH_TOKEN }).exec()
+    if (!userData) {
+        res.clearCookie("jwt", { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 })
+        req.session.destroy()
+        console.log("No User with the Refresh Token Found")
+        res.json(204).json({
+            success: true,
+            message: "No User with the Refresh Token Found"
+        })
+        return
+    }
+    try {
+        await userModel.updateOne({ REFRESH_TOKEN }, {
+            $unset: {
+                REFRESH_TOKEN
+            }
+        })
+        console.log("Cookies Cleared Successfully")
+        res.clearCookie("jwt", { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 })
+        req.session.destroy()
+        res.sendStatus(204)
+    } catch (err) {
+        console.log(`Error Occurred : ${err.message}`)
+        res.status(409).json({
+            success: false,
+            message: `Error Occurred : ${err.message}`
+        })
+    }
 }
 
 module.exports = { signInController, signUpController, logoutController, refreshController }
