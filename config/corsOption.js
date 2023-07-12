@@ -14,3 +14,5 @@ const corsOption = {
     },
     credentials: true
 }
+
+module.exports = corsOption

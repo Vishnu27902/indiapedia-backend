@@ -34,7 +34,8 @@ const stateSchema = new Schema({
             _id: {
                 type: mongoose.SchemaTypes.ObjectId,
                 required: true,
-                unique: true
+                unique: true,
+                sparse: true
             },
             username: {
                 type: String,

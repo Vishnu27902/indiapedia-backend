@@ -29,16 +29,19 @@ app.use(session({
 }))
 app.use(cookieParser())
 app.use(cors(corsOption))
-app.use(express.urlencoded({
-    extended: false
-}), express.json())
+app.use(
+    express.urlencoded({
+        extended: false
+    }),
+    express.json({
+        limit: "20mb"
+    }))
 
 // app.use("/api/v1", apiRouter)
 app.use("/app", appRouter)
 app.use("/auth", authRouter)
-app.use(verifyJWT)
-app.use("/user", userRouter)
 app.use("/admin", adminRouter)
+app.use("/user", verifyJWT, userRouter)
 
 app.use("*", (req, res) => {
     res.sendStatus(404)
