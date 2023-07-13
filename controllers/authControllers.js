@@ -89,7 +89,8 @@ const signInController = async (req, res) => {
                 success: true,
                 message: "Login Successful",
                 ACCESS_TOKEN,
-                role: user.role
+                role: user.role,
+                username: _id
             })
         } catch (err) {
             console.error(err)

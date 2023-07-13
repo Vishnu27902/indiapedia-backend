@@ -3,8 +3,8 @@ const fs = require("fs")
 const { format } = require("date-fns")
 
 const loginLogger = (req, res, next) => {
-    const { name } = req.body
-    const txt = `${name} tried to sign in at ${format(new Date(), "yyyy-MM-dd HH.mm.ss a").toLocaleString(undefined, { timeZone: 'Asia/Kolkata' })}\n`
+    const { username } = req.body
+    const txt = `${username} tried to sign in at ${format(new Date(), "yyyy-MM-dd HH.mm.ss a").toLocaleString(undefined, { timeZone: 'Asia/Kolkata' })}\n`
     fs.appendFileSync(path.join(__dirname, "..", "logs", "loginLogger.txt"), txt)
     console.log("Logs Updated Successfully")
     next()
