@@ -310,8 +310,14 @@ const addNewUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
     try {
-        const usersData = await userModel.find({})
+        let usersData = await userModel.find({})
         console.log("Users data fetched Successfully")
+        const { page, limit } = req.query
+        if (page && limit) {
+            const startIndex = page - 1
+            const endIndex = limit
+            usersData = usersData.slice(startIndex, endIndex)
+        }
         res.status(200).json({
             success: true,
             message: "Users data fetched Successfully",

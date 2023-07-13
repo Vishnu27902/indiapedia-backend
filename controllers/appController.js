@@ -3,7 +3,13 @@ const stateModel = require("../models/stateModel")
 
 const getStates = async (req, res) => {
     try {
-        const statesData = await stateModel.find({}).exec()
+        let statesData = await stateModel.find({}).exec()
+        const { page, limit } = req.query
+        if (page && limit) {
+            const startIndex = page - 1
+            const endIndex = limit
+            statesData = statesData.slice(startIndex, endIndex)
+        }
         console.log("States Data Fetched Successfully")
         res.status(200).json({
             success: true,
@@ -21,8 +27,14 @@ const getStates = async (req, res) => {
 
 const getCities = async (req, res) => {
     try {
-        const citiesData = await cityModel.find({}).exec()
+        let citiesData = await cityModel.find({}).exec()
         console.log("Cities Data Fetched Successfully")
+        const { page, limit } = req.query
+        if (page && limit) {
+            const startIndex = page - 1
+            const endIndex = limit
+            citiesData = citiesData.slice(startIndex, endIndex)
+        }
         res.status(200).json({
             success: true,
             message: "Cities Data Fetched Successfully",
