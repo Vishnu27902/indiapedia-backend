@@ -37,10 +37,10 @@ app.use(
         limit: "20mb"
     }))
 
-// app.use("/api/v1", apiRouter)
+app.use("/api/v1", apiRouter)
 app.use("/app", appRouter)
 app.use("/auth", authRouter)
-app.use("/admin", adminRouter)
+app.use("/admin", verifyJWT, adminRouter)
 app.use("/user", verifyJWT, userRouter)
 
 app.use("*", (req, res) => {

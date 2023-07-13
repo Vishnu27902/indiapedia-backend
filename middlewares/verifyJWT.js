@@ -5,6 +5,7 @@ const verifyJWT = (req, res, next) => {
     const authHeader = req.headers["authorization"]
     if (!authHeader) {
         res.status(401).json({ success: false, message: "Auth Header not set" })
+        return
     }
     const ACCESS_TOKEN = authHeader.split(" ")[1]
     jwt.verify(
