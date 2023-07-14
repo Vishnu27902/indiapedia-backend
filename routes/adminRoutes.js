@@ -1,5 +1,6 @@
 const express = require("express")
 const { getAdminData, adminProfileUpdate, deleteAdminSelf, addState, addCity, getState, editState, getCity, editCity, addNewUser, deleteUser, getUsers, editUser, deleteState, deleteCity, checkAdminCurrentPassword, changeAdminPassword, getUser } = require("../controllers/adminController")
+const { getStates, getCities } = require("../controllers/appController")
 const Router = express.Router()
 
 Router.route("/").get(getAdminData).patch(adminProfileUpdate).delete(deleteAdminSelf)
@@ -7,6 +8,10 @@ Router.route("/").get(getAdminData).patch(adminProfileUpdate).delete(deleteAdmin
 Router.route("/state").post(addState)
 
 Router.route("/city").post(addCity)
+
+Router.route("/states").get(getStates)
+
+Router.route("/cities").get(getCities)
 
 Router.route("/state/:id").get(getState).patch(editState).delete(deleteState)
 
