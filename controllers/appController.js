@@ -87,4 +87,28 @@ const getCity = async (req, res) => {
     }
 }
 
-module.exports = { getStates, getCities, getState, getCity }
+const getSearchResult = async (req, res) => {
+    const { data } = req.query
+    try {
+        const regex = new RegExp(data, "g")
+        const states = await stateModel.find({})
+        const cities = await cityModel.find({})
+        const statesData = states.map(state => regex.test(state.name))
+        const citiesData = cities.map(city => regex.test(city.name))
+        console.log(`Search results for the input ${data} has been successfully Generated`)
+        res.status(200).json({
+            success: true,
+            message: `Search results for the input ${data} has been successfully Generated`,
+            statesData,
+            citiesData
+        })
+    } catch (err) {
+        console.log(`Error Occurred : ${err.message}`)
+        res.status(409).json({
+            success: true,
+            message: `Error Occurred : ${err.message}`
+        })
+    }
+}
+
+module.exports = { getStates, getCities, getState, getCity,get }
