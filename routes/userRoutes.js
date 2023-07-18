@@ -1,5 +1,6 @@
 const express = require("express")
 const { getUserData, editUserData, deleteUserSelf, checkUserPassword, changeUserPassword, stateLike, stateDislike, statePost, statePostDelete, cityLike, cityDislike, cityPost, cityPostDelete } = require("../controllers/userController")
+const { getSearchResult } = require("../controllers/appController")
 const Router = express.Router()
 
 Router.route("/").get(getUserData).patch(editUserData).delete(deleteUserSelf)
@@ -19,5 +20,7 @@ Router.route("/cities/like/:id").patch(cityLike).delete(cityDislike)
 Router.route("/cities/post/:id").post(cityPost)
 
 Router.route("/cities/post/:id/:postID").delete(cityPostDelete)
+
+Router.route("/result").get(getSearchResult)
 
 module.exports = Router

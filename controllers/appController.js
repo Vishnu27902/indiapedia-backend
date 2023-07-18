@@ -88,13 +88,14 @@ const getCity = async (req, res) => {
 }
 
 const getSearchResult = async (req, res) => {
-    const { data } = req.query
+    let { data } = req.query
     try {
+        data = data.toLowerCase()
         const regex = new RegExp(data, "g")
         const states = await stateModel.find({})
         const cities = await cityModel.find({})
-        const statesData = states.map(state => regex.test(state.name))
-        const citiesData = cities.map(city => regex.test(city.name))
+        const statesData = states.filter(state => regex.test(state.name.toLowerCase()))
+        const citiesData = cities.filter(city => regex.test(city.name.toLowerCase()))
         console.log(`Search results for the input ${data} has been successfully Generated`)
         res.status(200).json({
             success: true,
@@ -111,4 +112,4 @@ const getSearchResult = async (req, res) => {
     }
 }
 
-module.exports = { getStates, getCities, getState, getCity,get }
+module.exports = { getStates, getCities, getState, getCity, getSearchResult }
