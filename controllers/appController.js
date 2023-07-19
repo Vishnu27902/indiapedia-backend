@@ -52,7 +52,7 @@ const getCities = async (req, res) => {
 const getState = async (req, res) => {
     const { id } = req.params
     try {
-        const stateData = await stateModel.find({ _id: id })
+        const stateData = await stateModel.findOne({ _id: id })
         console.log(`State Data with code ${id} Fetched Successfully`)
         res.status(200).json({
             success: true,
@@ -71,7 +71,7 @@ const getState = async (req, res) => {
 const getCity = async (req, res) => {
     const { id } = req.params
     try {
-        const cityData = await cityModel.find({ _id: id })
+        const cityData = await cityModel.findOne({ _id: id })
         console.log(`City Data with code ${id} Fetched Successfully`)
         res.status(200).json({
             success: true,
