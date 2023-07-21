@@ -229,21 +229,21 @@ const getAdminData = async (req, res) => {
 const adminProfileUpdate = async (req, res) => {
     const { username } = req.session
     let { email, name, img, phNumber } = req.body
-    email = email.toLowerCase()
-    const duplicateCheck = await userModel.findOne({ _id: email }).exec()
-    if (duplicateCheck && email !== username) {
-        console.log(`Duplicate Entry`)
-        res.status(400).json({
-            success: false,
-            message: "Duplicate Entry"
-        })
-        return
-    }
+    // email = email.toLowerCase()
+    // const duplicateCheck = await userModel.findOne({ _id: email }).exec()
+    // if (duplicateCheck && email !== username) {
+    //     console.log(`Duplicate Entry`)
+    //     res.status(400).json({
+    //         success: false,
+    //         message: "Duplicate Entry"
+    //     })
+    //     return
+    // }
     const adminData = await userModel.findOne({ _id: username }).exec()
     try {
         await userModel.updateOne({ _id: username }, {
             $set: {
-                _id: email,
+                // _id: email,
                 name,
                 img,
                 phNumber

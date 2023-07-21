@@ -27,26 +27,28 @@ const getUserData = async (req, res) => {
 
 const editUserData = async (req, res) => {
     const { username } = req.session
-    let { name, email, img, phNumber } = req.body
-    email = email.toLowerCase()
-    const duplicateCheck = await userModel.findOne({ _id: email }).exec()
-    if (username !== email && duplicateCheck) {
-        console.log("Duplicate Entry")
-        res.status(400).json({
-            success: false,
-            message: "Duplicate Entry"
-        })
-        return
-    }
+    let { name, img, phNumber } = req.body
+    // email = email.toLowerCase()
+    // const duplicateCheck = await userModel.findOne({ _id: email }).exec()
+    // if (username !== email && duplicateCheck) {
+    //     console.log("Duplicate Entry")
+    //     res.status(400).json({
+    //         success: false,
+    //         message: "Duplicate Entry"
+    //     })
+    //     return
+    // }
     name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
     try {
         await userModel.updateOne({ _id: username }, {
-            _id: email,
-            name,
-            img,
-            phNumber
+            $set: {
+                // _id: email,
+                name,
+                "img.data": img,
+                phNumber
+            }
         })
-        req.session.username = email
+        // req.session.username = email
         console.log(`User with ID ${username} updated Successfully`)
         res.status(200).json({
             success: true,
