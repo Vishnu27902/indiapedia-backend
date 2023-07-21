@@ -69,10 +69,7 @@ const stateSchema = new Schema({
         content: {
             type: String
         },
-        table: {
-            th: Array,
-            tr: Array
-        },
+        table: Array,
         list: Array,
         img: {
             data: {
