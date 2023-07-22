@@ -11,7 +11,11 @@ Router.route("/city").post(addCity)
 
 Router.route("/states").get(getStates)
 
+Router.route("/states/:id").get(getState)
+
 Router.route("/cities").get(getCities)
+
+Router.route("/cities/:id").get(getState)
 
 Router.route("/state/:id").get(getState).patch(editState).delete(deleteState)
 
