@@ -68,7 +68,6 @@ const addCity = async (req, res) => {
 
 const getState = async (req, res) => {
     const { id } = req.params
-    console.log(id)
     try {
         const stateData = await stateModel.findOne({ _id: id }).exec()
         console.log(`State ${stateData.name} fetched Successfully`)

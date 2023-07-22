@@ -11,15 +11,15 @@ Router.route("/city").post(addCity)
 
 Router.route("/states").get(getStates)
 
-Router.route("/states/:id").get(getState)
+Router.route("/states/:id").get(getState).delete(deleteState)
 
 Router.route("/cities").get(getCities)
 
-Router.route("/cities/:id").get(getState)
+Router.route("/cities/:id").get(getCity).delete(deleteCity)
 
-Router.route("/state/:id").get(getState).patch(editState).delete(deleteState)
+Router.route("/state/:id").get(getState).patch(editState)
 
-Router.route("/city/:id").get(getCity).patch(editCity).delete(deleteCity)
+Router.route("/city/:id").get(getCity).patch(editCity)
 
 Router.route("/users").get(getUsers).post(addNewUser)
 
